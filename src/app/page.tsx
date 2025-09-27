@@ -510,28 +510,24 @@
 // }
 "use client";
 
+import { useState } from "react";
+import Link from "next/link";
+import HandTracker from "../components/HandTracker";
+import VirtualKeyboard from "../components/ARLaptop/Keyboard";
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
-import { useState } from "react";
-// Assuming these components are correctly implemented in their respective paths
-import HandTracker from "../components/HandTracker"; // Component for video feed and hand tracking
-import VirtualKeyboard from "../components/ARLaptop/Keyboard"; // 3D R3F Virtual Keyboard component
 
-// Define the shape of the finger data to match what VirtualKeyboard expects
 interface FingerData {
   x: number;
   y: number;
   z: number;
-  type: string; // Keep it generic to match VirtualKeyboard interface
+  type: string;
 }
 
 export default function Home() {
-  // State to hold the tracked finger data (array of FingerData objects)
   const [fingers, setFingers] = useState<FingerData[]>([]);
-  // State to hold the text typed by interacting with the virtual keyboard
   const [typedText, setTypedText] = useState("");
 
-  // Array of all possible finger types for mapping/display
   const fingerTypes = ['thumb', 'index', 'middle', 'ring', 'pinky'];
 
   return (
@@ -541,24 +537,31 @@ export default function Home() {
           Enhanced AR Hand Tracking Virtual Keyboard
         </h1>
         
+        {/* Navigation */}
+        <div className="flex justify-center mb-8">
+          <Link 
+            href="/ar" 
+            className="px-8 py-4 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-bold rounded-xl shadow-lg transition-all duration-300 transform hover:scale-105 flex items-center gap-3"
+          >
+            <span className="text-2xl">🥽</span>
+            <span>Experience in AR</span>
+          </Link>
+        </div>
+        
         <div className="grid lg:grid-cols-2 gap-10 items-start">
           
-          {/* Section 1: Enhanced Hand Tracking Camera Feed & Stats */}
           <div className="flex flex-col items-center p-4 bg-gray-800 rounded-xl shadow-2xl">
             <h2 className="text-2xl font-bold mb-4 text-green-400 border-b border-green-400 pb-2 w-full text-center">
               Multi-Finger Camera Feed
             </h2>
             <div className="border-4 border-green-400 rounded-lg overflow-hidden">
-              {/* HandTracker component is assumed to handle the video feed and detection */}
               <HandTracker onFingerMove={setFingers} />
             </div>
             
-            {/* Active Finger Status Panel */}
             <div className="mt-6 p-4 bg-gray-900 rounded-xl w-full max-w-md border border-gray-700">
               <h3 className="text-lg font-semibold mb-3 text-yellow-400">Active Fingers Status:</h3>
               <div className="grid grid-cols-5 gap-3 text-sm">
                 {fingerTypes.map(fingerType => {
-                  // Check if this finger type is currently being tracked
                   const isActive = fingers.some(f => f.type === fingerType);
                   const fingerCount = fingers.filter(f => f.type === fingerType).length;
 
@@ -584,7 +587,6 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Section 2: Enhanced 3D Virtual Keyboard */}
           <div className="flex flex-col items-center p-4 bg-gray-800 rounded-xl shadow-2xl">
             <h2 className="text-2xl font-bold mb-4 text-blue-400 border-b border-blue-400 pb-2 w-full text-center">
               3D Multi-Finger Virtual Keyboard
@@ -594,28 +596,24 @@ export default function Home() {
                 camera={{ position: [0, 2, 7], fov: 50 }} 
                 className="bg-gray-900"
               >
-                {/* Lighting */}
                 <ambientLight intensity={0.4} />
                 <directionalLight position={[5, 5, 5]} intensity={0.8} castShadow />
                 <spotLight position={[0, 10, 0]} intensity={0.3} penumbra={1} castShadow />
                 
-                {/* Camera Controls */}
                 <OrbitControls 
                   makeDefault 
                   enablePan={false}
-                  maxPolarAngle={Math.PI / 2} // Limit to above the 'floor'
+                  maxPolarAngle={Math.PI / 2}
                   minDistance={4}
                   maxDistance={12}
-                  // Optionally add damping for smoother controls
                   enableDamping={true}
                   dampingFactor={0.05}
                 />
                 
-                {/* The Virtual Keyboard component */}
                 <VirtualKeyboard
-                  position={[0, -1, 0]} // Center the keyboard lower in the frame
-                  fingers={fingers} // Pass the tracked finger data
-                  onTextInput={setTypedText} // Callback for key presses
+                  position={[0, -1, 0]}
+                  fingers={fingers}
+                  onTextInput={setTypedText}
                 />
               </Canvas>
             </div>
@@ -628,7 +626,6 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Section 3: Enhanced Typed Text Display */}
         <div className="mt-12 p-6 bg-gray-800 rounded-xl shadow-2xl border-l-4 border-yellow-400">
           <h3 className="text-2xl font-bold mb-4 text-yellow-400">Typed Text Output:</h3>
           <div className="bg-gray-900 p-5 rounded-lg min-h-32 border border-gray-700 relative shadow-inner">
@@ -641,14 +638,12 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Section 4: Enhanced Instructions & Tips */}
         <div className="mt-12 bg-blue-900 bg-opacity-30 p-6 rounded-xl border-2 border-blue-600 shadow-2xl">
           <h3 className="text-2xl font-bold mb-6 text-blue-300 text-center">
             Enhanced Multi-Finger Usage Guide
           </h3>
           <div className="grid md:grid-cols-2 gap-8">
             
-            {/* Setup Instructions */}
             <div>
               <h4 className="font-semibold text-xl text-green-400 mb-3 border-b border-green-500 pb-1">Setup Essentials:</h4>
               <ul className="list-disc list-inside space-y-2 text-gray-200 text-base">
@@ -659,7 +654,6 @@ export default function Home() {
               </ul>
             </div>
             
-            {/* Typing Tips */}
             <div>
               <h4 className="font-semibold text-xl text-yellow-400 mb-3 border-b border-yellow-500 pb-1">Advanced Typing Tips:</h4>
               <ul className="list-disc list-inside space-y-2 text-gray-200 text-base">
@@ -673,7 +667,6 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Section 5: Performance Stats */}
         <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
           
           <div className="bg-gray-800 p-5 rounded-xl border border-blue-500 shadow-xl">
@@ -688,7 +681,6 @@ export default function Home() {
           
           <div className="bg-gray-800 p-5 rounded-xl border border-yellow-500 shadow-xl">
             <div className="text-4xl font-extrabold text-yellow-400">
-              {/* Calculate the max count for any single finger type */}
               {fingerTypes.length > 0 ? Math.max(0, ...fingerTypes.map(fingerType => 
                 fingers.filter(f => f.type === fingerType).length
               )) : 0}
